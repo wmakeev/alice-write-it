@@ -1,0 +1,9 @@
+{
+  "name": "alice-write-it-handler",
+  "private": true,
+  "version": "0.0.0",
+  "dependencies": {
+    "aws-sdk": "^2",
+    "envalid": "^7.3.1"
+  }
+}

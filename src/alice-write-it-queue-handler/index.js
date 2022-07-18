@@ -5,6 +5,13 @@ const { env } = require('./env')
 
 const { SCRIPT_URL } = env
 
+/** Стартовые фразы которые могут включаться в сам текст */
+const dropStartPhrase = [
+  'попроси записать фразу ',
+  'попроси сделать пометку ',
+  'попроси записать лог '
+]
+
 /**
  * Обработчик событий из очереди
  *
@@ -25,7 +32,9 @@ module.exports.handler = async function (event, context) {
         .map(it => it)
         .map(body => {
           try {
-            return JSON.parse(body)
+            /** @type {AliceEvent} */
+            const aliceEvent = JSON.parse(body)
+            return aliceEvent
           } catch (err) {
             console.log(`Error body parsing - ${body}`)
             return null
@@ -34,10 +43,18 @@ module.exports.handler = async function (event, context) {
 
       if (!timestamp || !body) return []
 
+      let phrase = body.request.original_utterance
+
+      const dropStart = dropStartPhrase.find(it => phrase.startsWith(it))
+
+      if (dropStart) {
+        phrase = phrase.substring(dropStart.length)
+      }
+
       return [
         {
           timestamp,
-          text: body.request.original_utterance
+          text: phrase
         }
       ]
     }) ?? []
@@ -51,6 +68,8 @@ module.exports.handler = async function (event, context) {
     body: JSON.stringify(postBody)
   })
 
+  /** @type {LifeLogScriptResponse} */
+  // @ts-expect-error returns unknown
   const result = await resp.json()
 
   console.log('result -', result)
