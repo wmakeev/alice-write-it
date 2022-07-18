@@ -32,7 +32,7 @@ module.exports.handler = async function (event, context) {
         .map(it => it)
         .map(body => {
           try {
-            /** @type {AliceEvent} */
+            /** @type {AliceEvent<CustomIntent>} */
             const aliceEvent = JSON.parse(body)
             return aliceEvent
           } catch (err) {
@@ -51,21 +51,63 @@ module.exports.handler = async function (event, context) {
         phrase = phrase.substring(dropStart.length)
       }
 
+      const intents = body.request?.nlu?.intents
+
+      /** @type {'food' | 'exercise' | undefined} */
+      let type
+
+      /** @type {string | undefined} */
+      let item
+
+      /** @type {number | undefined} */
+      let quantity
+
+      /** @type {string | undefined} */
+      let uom
+
+      /** @type {string | undefined} */
+      let dish
+
+      /** @type {number | undefined} */
+      let dishNum
+
+      /** @type {number | undefined} */
+      let barcode
+
+      if (intents?.food) {
+        type = 'food'
+      } else if (intents.exercise) {
+        type = 'exercise'
+      }
+
+      if (type) {
+        item = intents[type].slots?.item?.value
+        quantity = intents[type].slots?.quantity?.value
+        uom = intents[type].slots?.uom?.value
+        if (type === 'food') {
+          dish = intents[type].slots?.dish?.value
+          dishNum = intents[type].slots?.dishNum?.value
+          barcode = intents[type].slots?.barcode?.value
+        }
+      }
+
       return [
         {
-          timestamp,
-          text: phrase
+          'Дата': timestamp,
+          'Событие': phrase,
+          'Тип': type,
+          'Предмет': item,
+          'Кол-во': quantity,
+          'Ед. изм.': uom,
+          'Блюдо': [dish ?? dishNum].filter(it => it).map(it => String(it))[0],
+          'Штрихкод': barcode
         }
       ]
     }) ?? []
 
-  const postBody = {
-    rows: rows.map(row => [row.timestamp, row.text])
-  }
-
   const resp = await fetch(SCRIPT_URL, {
     method: 'POST',
-    body: JSON.stringify(postBody)
+    body: JSON.stringify({ rows })
   })
 
   /** @type {LifeLogScriptResponse} */
