@@ -38,42 +38,6 @@ interface MessageQueueTriggerLambdaEvent {
   }>
 }
 
-interface AliceEvent {
-  meta: {
-    locale: 'ru-RU'
-    /** `Asia/Yekaterinburg` */
-    timezone: string
-    /** `aliced/1.0 (Yandex yandexmini; Linux 1.0)` */
-    client_id: string
-    interfaces: { payments: {}; account_linking: {} }
-  }
-  session: {
-    message_id: number
-    session_id: string
-    skill_id: string
-    user: {
-      user_id: string
-    }
-    application: {
-      application_id: string
-    }
-    user_id: string
-    new: boolean
-  }
-  request: {
-    type: 'SimpleUtterance'
-    command: string
-    original_utterance: string
-    nlu: {
-      tokens: string[]
-      entities: []
-      intents: {}
-    }
-    markup: { dangerous_context: boolean }
-  }
-  version: '1.0'
-}
-
 interface LambdaContext {
   deadlineMs: number
   token: {
