@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "ES2021"
+    ],
+    "noEmit": true,
+    "strict": true,
+    "allowJs": true,
+    "alwaysStrict": true,
+    "checkJs": true,
+    "moduleResolution": "Node",
+    "module": "CommonJS",
+    "allowSyntheticDefaultImports": true
+  },
+  "include": [
+    "./src",
+    "./test",
+    "./types"
+  ]
+}
