@@ -53,7 +53,7 @@ module.exports.handler = async function (event, context) {
 
       const intents = body.request?.nlu?.intents
 
-      /** @type {'food' | 'exercise' | undefined} */
+      /** @type {'food' | 'exercise' | 'life' | 'note' | undefined} */
       let type
 
       /** @type {string | undefined} */
@@ -74,21 +74,37 @@ module.exports.handler = async function (event, context) {
       /** @type {number | undefined} */
       let barcode
 
+      /** @type {string | undefined} */
+      let description
+
       if (intents?.food) {
         type = 'food'
       } else if (intents.exercise) {
         type = 'exercise'
+      } else if (intents.life) {
+        type = 'life'
+      } else if (intents.note) {
+        type = 'note'
       }
 
       if (type) {
-        item = intents[type].slots?.item?.value
-        quantity = intents[type].slots?.quantity?.value
-        uom = intents[type].slots?.uom?.value
+        if (type !== 'note') {
+          item = intents[type].slots?.item?.value
+          quantity = intents[type].slots?.quantity?.value
+        }
+
+        if (type === 'food' || type === 'exercise') {
+          quantity = intents[type].slots?.quantity?.value
+          uom = intents[type].slots?.uom?.value
+        }
+
         if (type === 'food') {
           dish = intents[type].slots?.dish?.value
           dishNum = intents[type].slots?.dishNum?.value
           barcode = intents[type].slots?.barcode?.value
         }
+
+        description = intents[type].slots?.description?.value
       }
 
       return [
@@ -100,7 +116,8 @@ module.exports.handler = async function (event, context) {
           'Кол-во': quantity,
           'Ед. изм.': uom,
           'Блюдо': [dish ?? dishNum].filter(it => it).map(it => String(it))[0],
-          'Штрихкод': barcode
+          'Штрихкод': barcode,
+          'Прочее': description
         }
       ]
     }) ?? []
