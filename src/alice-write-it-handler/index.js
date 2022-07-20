@@ -11,11 +11,9 @@ const mq = new AWS.SQS({
 })
 
 /** Стартовые фразы которые могут включаться в сам текст */
-const dropStartPhrase = [
-  'попроси записать фразу ',
-  'попроси сделать пометку ',
-  'попроси записать лог '
-]
+const dropStartPhrase = ['попроси записать фразу ', 'записать фразу ']
+
+const cancelWord = 'отмена'
 
 const shouldClosePhrases = ['сон', 'пробуждение']
 
@@ -24,52 +22,60 @@ const shouldClosePhrases = ['сон', 'пробуждение']
  *
  * @param event {AliceEvent} request payload.
  * @param context {LambdaContext} information about current execution context.
- *
- * @return {Promise<Object>} response to be serialized as JSON.
+ * @returns {Promise<AliceResponse>} response to be serialized as JSON.
  */
 module.exports.handler = async (event, context) => {
   const { version, session, request } = event
 
-  let endSession = false
-  let text = 'Скажите фразу и она будет записана в лог'
+  /**
+   * @param {string} text
+   * @param {boolean} endSession
+   */
+  const getResponse = (text, endSession) => {
+    return {
+      version,
+      session,
+      response: {
+        text,
+        end_session: endSession
+      }
+    }
+  }
 
   try {
-    if (request['original_utterance'].length > 0) {
-      /** @type {string} Фраза */
-      let phrase = request['original_utterance']?.toLowerCase()
-
-      console.log('request.original_utterance -', phrase)
-
-      const dropStart = dropStartPhrase.find(it => phrase.startsWith(it))
-
-      if (dropStart) {
-        phrase = phrase.substring(dropStart.length)
-      }
-
-      endSession = shouldClosePhrases.includes(phrase)
-
-      text = 'Записано - ' + phrase
-
-      const params = {
-        QueueUrl: QUEUE_URL,
-        MessageBody: JSON.stringify(event)
-      }
-
-      await mq.sendMessage(params).promise()
+    if (!request.original_utterance) {
+      return getResponse('Скажите фразу которую нужно записать', false)
     }
+
+    console.log('request.original_utterance -', request.original_utterance)
+
+    /** @type {string} Фраза */
+    let phrase = request.original_utterance.toLowerCase()
+
+    if (phrase.includes(cancelWord)) {
+      return getResponse('Вы отменили запись этой фразы, повторите.', false)
+    }
+
+    const dropStart = dropStartPhrase.find(it => phrase.startsWith(it))
+
+    if (dropStart) {
+      phrase = phrase.substring(dropStart.length)
+    }
+
+    const params = {
+      QueueUrl: QUEUE_URL,
+      MessageBody: JSON.stringify(event)
+    }
+
+    await mq.sendMessage(params).promise()
+
+    let text = `Записано - ${phrase}`
+    let endSession = shouldClosePhrases.includes(phrase)
+
+    return getResponse(text, endSession)
   } catch (/** @type {any} */ err) {
     console.log(err.message)
 
-    endSession = true
-    text = 'Произошла ошибка, попробуйте обратиться позже.'
-  }
-
-  return {
-    version,
-    session,
-    response: {
-      text,
-      end_session: endSession
-    }
+    return getResponse('Произошла ошибка, попробуйте обратиться позже.', true)
   }
 }
