@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 function doPost(ev) {
   let ok = true
   let description = undefined
@@ -12,24 +14,32 @@ function doPost(ev) {
       ok = false
       description = 'post body is empty'
     } else {
-      const ss = SpreadsheetApp.getActive().getSheetByName('LifeLog')
+      const sheet = SpreadsheetApp.getActive().getSheetByName('LifeLog')
+      const columns = sheet.getLastColumn()
+      const header = sheet.getRange(1, 1, 1, columns).getValues()[0]
 
-      if (!ss) throw new Error('"LifeLog" sheet not found')
+      if (!sheet) throw new Error('"LifeLog" sheet not found')
 
-      const rows = JSON.parse(contents).rows
+      const contentRows = JSON.parse(contents).rows
 
-      if (!rows || !rows.length) {
+      if (!contentRows || !contentRows.length) {
         throw new Error('data has no rows')
       }
 
-      for (const row of rows) {
-        if (!row || row.length !== 2) {
-          throw new Error('row shoud have 2 columns')
+      for (const contentRow of contentRows) {
+        const resultRow = new Array(columns)
+
+        for (const [key, value] of Object.entries(contentRow)) {
+          const headerIndex = header.indexOf(key)
+
+          if (headerIndex === -1) {
+            throw new Error(`Заголовок "${key}" не найден в таблице`)
+          }
+
+          resultRow[headerIndex] = headerIndex === 0 ? new Date(value) : value
         }
 
-        const date = new Date(row[0])
-
-        ss.appendRow([date, row[1]])
+        sheet.appendRow(resultRow)
       }
     }
   } catch (err) {
