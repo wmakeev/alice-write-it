@@ -6,11 +6,7 @@ const { env } = require('./env')
 const { SCRIPT_URL } = env
 
 /** Стартовые фразы которые могут включаться в сам текст */
-const dropStartPhrase = [
-  'попроси записать фразу ',
-  'попроси сделать пометку ',
-  'попроси записать лог '
-]
+const dropStartPhrase = ['попроси записать фразу ']
 
 /**
  * Обработчик событий из очереди
@@ -77,6 +73,9 @@ module.exports.handler = async function (event, context) {
       /** @type {string | undefined} */
       let description
 
+      /** @type {string | undefined} */
+      let cook
+
       if (intents?.food) {
         type = 'food'
       } else if (intents.exercise) {
@@ -101,7 +100,18 @@ module.exports.handler = async function (event, context) {
         if (type === 'food') {
           dish = intents[type].slots?.dish?.value
           dishNum = intents[type].slots?.dishNum?.value
-          barcode = intents[type].slots?.barcode?.value
+          barcode = Number.parseInt(
+            [
+              intents[type].slots?.barcode?.value,
+              intents[type].slots?.barcode2?.value,
+              intents[type].slots?.barcode3?.value,
+              intents[type].slots?.barcode4?.value,
+              intents[type].slots?.barcode5?.value
+            ]
+              .filter(it => it !== undefined)
+              .join('')
+          )
+          cook = intents[type].slots?.cook?.value
         }
 
         description = intents[type].slots?.description?.value
@@ -116,6 +126,7 @@ module.exports.handler = async function (event, context) {
           'Кол-во': quantity,
           'Ед. изм.': uom,
           'Блюдо': [dish ?? dishNum].filter(it => it).map(it => String(it))[0],
+          'Обработка': cook,
           'Штрихкод': barcode,
           'Прочее': description
         }
