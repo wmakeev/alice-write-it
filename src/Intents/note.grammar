@@ -1,0 +1,12 @@
+root:
+    ($StartPhrase)? $NoteTerm $Description+
+
+slots:
+    description:
+        source: $Description
+
+$Description:
+    .+
+
+$NoteTerm:
+    примечание | заметка

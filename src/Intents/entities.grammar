@@ -1,0 +1,181 @@
+entity Food:
+    lemma: true
+    values:
+        apple:
+            яблоко
+        peach:
+            персик
+            нектарин
+        apricot:
+            абрикос
+        butter:
+            [сливочный масло]
+        olive_oil:
+            [оливковый масло]
+        sandwich:
+            бутерброд
+        okroshka:
+            окрошка
+        cheese:
+            сыр
+            брынза
+        potato:
+            картофель
+            картошка
+            бульба
+            картофелина
+        cucumber:
+            огурец
+        greens:
+            зелень
+            укроп
+            петрушка
+        cabbage:
+            капуста
+        sauerkraut:
+            [квашенный капуста]
+        oats_milk:
+            [овсяный молоко]
+        kefir:
+            кефир
+            кифир
+        oatmeal:
+            овсянка
+            [овсяный каша]
+        millet:
+            пшено
+            пшенка
+            [пшенная каша]
+        bread:
+            хлеб
+            [хлеб ржаной]
+        egg:
+            яйцо
+            [куринное яйцо]
+            [куриное яйцо]
+        tomato:
+            помидор
+        blueberries:
+            черника
+        honey:
+            мед
+            мёд
+        sweet_cherry:
+            черешня
+        sour_cream:
+            сметана
+        courgette:
+            кабачок
+
+entity Exercise:
+    lemma: true
+    values:
+        yoga:
+            йога
+        release:
+            релиз
+        crossfit:
+            кросфит
+            кроссфит
+        bike:
+            велосипед
+            покатушка
+        exercise:
+            упражнение
+            тренировка
+        pull_ups:
+            подтягивать
+            подтягивание
+        push_ups:
+            отжать
+            отжимание
+        abs:
+            пресс
+        squats:
+            приседание
+
+entity Life:
+    lemma: true
+    values:
+        wakeup:
+            пробуждение
+            проснуться
+            подняться
+        sleep:
+            сон
+            спать
+            засыпать
+            ложиться спать
+        weight:
+            вес
+        pain:
+            боль
+            болеть
+            больно
+        code_1:
+            код 1
+        code_2:
+            код 2
+        entrdrop:
+            сброс энтропии
+        expand:
+            расширение
+
+entity FoodUom:
+    lemma: true
+    values:
+        pcs:
+            штука
+            шт
+        g:
+            грамм
+            г
+        ml:
+            миллилитр
+            мл
+        kg:
+            килограмм
+            кг
+        tsp:
+            чайная ложка
+            чл
+        tbsp:
+            столовая ложка
+            стл
+        glass:
+            стакан
+
+entity ExerciseUom:
+    lemma: true
+    values:
+        repetition:
+            повтор
+        approach:
+            подход
+        min:
+            минута
+        h:
+            час
+
+entity StartPhrase:
+    values:
+        start_phrase:
+            запиши фразу
+            записать фразу
+            попроси записать фразу
+            скажи записать фразу
+
+entity Cook:
+    lemma: true
+    values:
+        raw:
+            свежий
+        stew:
+            тушеный
+            тушить
+        fry:
+            жареный
+            жарить
+        boil:
+            вареный
+            варить

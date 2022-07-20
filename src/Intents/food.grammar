@@ -1,0 +1,74 @@
+root:
+    ($StartPhrase)? (продукт)? $BarcodeTerm ($Barcode)* ($QtyTerm $Value)? ($Description)?
+    ($StartPhrase)? блюдо номер $DishNumber вес ($Value)? ($Description)?
+    ($StartPhrase)? блюдо $Dish ($Value)? ($Description)?
+    ($StartPhrase)? [$Product $Value] ($Description)?
+    ($StartPhrase)? $Product ($Description)?
+
+slots:
+    item:
+        type: Food
+        source: $Product
+    dish:
+        source: $Dish
+    dishNum:
+        type: YANDEX.NUMBER
+        source: $DishNumber
+    barcode:
+        type: YANDEX.NUMBER
+        source: $Barcode
+    barcode2:
+        type: YANDEX.NUMBER
+        source: $Barcode
+    barcode3:
+        type: YANDEX.NUMBER
+        source: $Barcode
+    barcode4:
+        type: YANDEX.NUMBER
+        source: $Barcode
+    barcode5:
+        type: YANDEX.NUMBER
+        source: $Barcode
+    quantity:
+        type: YANDEX.NUMBER
+        source: $Qty
+    uom:
+        type: FoodUom
+        source: $Uom
+    description:
+        source: $Description
+    cook:
+        type: Cook
+        source: $Cook
+
+$Description:
+    .+
+
+$Product:
+    [$Food ($Cook)?]
+
+$Dish:
+    .+
+
+$DishNumber:
+    $YANDEX.NUMBER
+
+$Barcode:
+    $YANDEX.NUMBER
+
+$Qty:
+    $YANDEX.NUMBER
+
+$Uom:
+    $FoodUom
+
+$Value:
+    $Qty ($Uom)?
+
+$QtyTerm:
+    количество | всего
+
+$BarcodeTerm:
+    штрихкод
+    штрих код
+    шк

@@ -1,0 +1,21 @@
+root:
+    ($StartPhrase)? $Item ($Qty)? ($Description)?
+
+slots:
+    item:
+        type: Life
+        source: $Item
+    quantity:
+        type: YANDEX.NUMBER
+        source: $Qty
+    description:
+        source: $Description
+
+$Item:
+    $Life
+
+$Qty:
+    $YANDEX.NUMBER
+
+$Description:
+    .+
