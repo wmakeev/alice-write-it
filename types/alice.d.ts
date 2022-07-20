@@ -58,6 +58,15 @@ interface AliceEvent<Intents extends AliceNluIntents = AliceNluIntents> {
   version: '1.0'
 }
 
+interface AliceResponse {
+  version: AliceEvent['version']
+  session: AliceEvent['session']
+  response: {
+    text: string
+    end_session: boolean
+  }
+}
+
 type CustomIntent = {
   food: {
     slots: {
@@ -91,6 +100,36 @@ type CustomIntent = {
         tokens: { start: number; end: number }
         value: number
       }
+      barcode2?: {
+        type: 'YANDEX.NUMBER'
+        tokens: { start: number; end: number }
+        value: number
+      }
+      barcode3?: {
+        type: 'YANDEX.NUMBER'
+        tokens: { start: number; end: number }
+        value: number
+      }
+      barcode4?: {
+        type: 'YANDEX.NUMBER'
+        tokens: { start: number; end: number }
+        value: number
+      }
+      barcode5?: {
+        type: 'YANDEX.NUMBER'
+        tokens: { start: number; end: number }
+        value: number
+      }
+      description?: {
+        type: 'YANDEX.STRING'
+        tokens: { start: number; end: number }
+        value: string
+      }
+      cook?: {
+        type: 'Raw'
+        tokens: { start: number; end: number }
+        value: string
+      }
     }
   }
   exercise: {
@@ -108,7 +147,40 @@ type CustomIntent = {
       uom?: {
         type: 'YANDEX.STRING'
         tokens: { start: number; end: number }
-        value: 'подход'
+        value: string
+      }
+      description?: {
+        type: 'YANDEX.STRING'
+        tokens: { start: number; end: number }
+        value: string
+      }
+    }
+  }
+  life: {
+    slots: {
+      item: {
+        type: 'Life'
+        tokens: { start: number; end: number }
+        value: string
+      }
+      quantity?: {
+        type: 'YANDEX.NUMBER'
+        tokens: { start: number; end: number }
+        value: number
+      }
+      description?: {
+        type: 'YANDEX.STRING'
+        tokens: { start: number; end: number }
+        value: string
+      }
+    }
+  }
+  note: {
+    slots: {
+      description?: {
+        type: 'YANDEX.STRING'
+        tokens: { start: number; end: number }
+        value: string
       }
     }
   }
