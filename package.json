@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "dependencies": {
     "envalid": "^7.3.1",
-    "undici": "^5.6.1"
+    "undici": "^5.8.2"
   },
   "devDependencies": {
     "@types/aws-sdk": "^2.7.0",
